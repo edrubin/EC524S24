@@ -31,7 +31,7 @@ Welcome to Economics 524 (424): Prediction and machine-learning in econometrics,
 - [R for Data Science](https://r4ds.had.co.nz/)
 - [Introduction to Data Science](https://www.springer.com/us/book/9783319500164) (not available without purchase)
 - [The Elements of Statistical Learning](http://web.stanford.edu/~hastie/ElemStatLearn/)
-- [Data Science for Public Policy](https://link.springer.com/book/10.1007/978-3-030-71352-2) (not available without purchase)
+- [Data Science for Public Policy](https://link.springer.com/book/10.1007/978-3-030-71352-2) (ebook available through UO library)
 
 ## Lecture notes
 
@@ -233,7 +233,7 @@ Due: TBA
 *Weight:* Approximately 25%
 
 **In-class portion**
-<br>Friday (14 June 2024) at 10:15a–12:15p
+<br>*Friday (14 June 2024) at 10:15a–12:15p*
 <br>*Weight:* Approximately 75%
 
 ## Lab notes
