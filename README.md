@@ -35,23 +35,23 @@ Welcome to Economics 524 (424): Prediction and machine-learning in econometrics,
 
 ## Lecture notes
 
-[**000 - Overview (Why predict?)**](https://raw.githack.com/edrubin/EC524W23/master/lecture/000/000-slides.html)
+[**000 - Overview (Why predict?)**](https://raw.githack.com/edrubin/EC524S24/master/lecture/000/slides.html)
 
 1. Why do we have a class on prediction?
 2. How is prediction (and how are its tools) different from causal inference?
 3. Motivating examples
 
-**Formats** [.html](https://raw.githack.com/edrubin/EC524W23/master/lecture/000/000-slides.html) | [.pdf](https://github.com/edrubin/EC524W23/blob/master/lecture/000/000-slides.pdf) | [.Rmd](https://github.com/edrubin/EC524W23/blob/master/lecture/000/000-slides.Rmd)
+**Formats** [.html](https://raw.githack.com/edrubin/EC524S24/master/lecture/000/slides.html) | [.pdf](https://github.com/edrubin/EC524S24/blob/master/lecture/000/slides.pdf) | [.rmd](https://github.com/edrubin/EC524S24/blob/master/lecture/000/slides.rmd)
 
 **Readings** Introduction in *ISL*
 
-[**001 - Statistical learning foundations**](https://raw.githack.com/edrubin/EC524W23/master/lecture/001/001-slides.html)
+[**001 - Statistical learning foundations**](https://raw.githack.com/edrubin/EC524S24/master/lecture/001/slides.html)
 
 1. Why do we have a class on prediction?
 2. How is prediction (and how are its tools) different from causal inference?
 3. Motivating examples
 
-**Formats** [.html](https://raw.githack.com/edrubin/EC524W23/master/lecture/001/001-slides.html) | [.pdf](https://github.com/edrubin/EC524W23/blob/master/lecture/001/001-slides.pdf) | [.Rmd](https://github.com/edrubin/EC524W23/blob/master/lecture/001/001-slides.Rmd)
+**Formats** [.html](https://raw.githack.com/edrubin/EC524S24/master/lecture/001/slides.html) | [.pdf](https://github.com/edrubin/EC524S24/blob/master/lecture/001/slides.pdf) | [.rmd](https://github.com/edrubin/EC524S24/blob/master/lecture/001/slides.rmd)
 
 **Readings**
 
@@ -61,7 +61,7 @@ Welcome to Economics 524 (424): Prediction and machine-learning in econometrics,
 
 **Supplements** [Unsupervised character recognization](https://colah.github.io/posts/2014-10-Visualizing-MNIST/)
 
-[**002 - Model accuracy**](https://raw.githack.com/edrubin/EC524W23/master/lecture/002/002-slides.html)
+[**002 - Model accuracy**](https://raw.githack.com/edrubin/EC524S24/master/lecture/002/slides.html)
 
 1. Model accuracy
 1. Loss for regression and classification
@@ -69,7 +69,7 @@ Welcome to Economics 524 (424): Prediction and machine-learning in econometrics,
 1. The Bayes classifier
 1. KNN
 
-**Formats** [.html](https://raw.githack.com/edrubin/EC524W23/master/lecture/002/002-slides.html) | [.pdf](https://github.com/edrubin/EC524W23/blob/master/lecture/002/002-slides.pdf) | [.Rmd](https://github.com/edrubin/EC524W23/blob/master/lecture/002/002-slides.Rmd)
+**Formats** [.html](https://raw.githack.com/edrubin/EC524S24/master/lecture/002/slides.html) | [.pdf](https://github.com/edrubin/EC524S24/blob/master/lecture/002/slides.pdf) | [.rmd](https://github.com/edrubin/EC524S24/blob/master/lecture/002/slides.rmd)
 
 **Readings** 
 
@@ -84,7 +84,7 @@ Welcome to Economics 524 (424): Prediction and machine-learning in econometrics,
 1. k-fold cross validation
 1. The bootstrap
 
-**Formats** [.html](https://raw.githack.com/edrubin/EC524W23/master/lecture/003/003-slides.html) | [.pdf](https://github.com/edrubin/EC524W23/blob/master/lecture/003/003-slides.pdf) | [.Rmd](https://github.com/edrubin/EC524W23/blob/master/lecture/003/003-slides.Rmd)
+**Formats** [.html](https://raw.githack.com/edrubin/EC524W23/master/lecture/003/003-slides.html) | [.pdf](https://github.com/edrubin/EC524W23/blob/master/lecture/003/003-slides.pdf) | [.rmd](https://github.com/edrubin/EC524W23/blob/master/lecture/003/003-slides.rmd)
 
 **Readings**
 
