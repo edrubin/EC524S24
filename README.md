@@ -11,7 +11,7 @@ Welcome to Economics 524 (424): Prediction and machine-learning in econometrics,
 
 **Office hours**
 
-- **Ed Rubin** Tu., 3p–4p, PLC 530
+- **Ed Rubin** ?, PLC 530
 - **Ngan Tran** We., 2p–3p, PLC 428
 
 ## Syllabus
@@ -22,7 +22,7 @@ Welcome to Economics 524 (424): Prediction and machine-learning in econometrics,
 
 ### Required books
 
-- [Introduction to Statistical Learning](https://www-bcf.usc.edu/~gareth/ISL/)
+- [Introduction to Statistical Learning](https://www.statlearning.com/)
 - [The Hundred-Page Machine Learning Book](http://themlbook.com/)
 - [Data Visualization](https://socviz.co/)
 
@@ -328,9 +328,9 @@ Housing data [download](https://github.com/edrubin/EC524W22/raw/master/lab/001-c
 
 ### R
 
+- [UO library resources/workshops](https://researchguides.uoregon.edu/library_workshops)
 - [RStudio's recommendations for learning R](https://education.rstudio.com/learn/), plus cheatsheets, books, and tutorials
 - [YaRrr! The Pirate’s Guide to R](https://bookdown.org/ndphillips/YaRrr/) (free online)
-- [UO library resources/workshops](http://uoregon.libcal.com/calendar/dataservices/?cid=11979&t=g&d=0000-00-00&cal=11979,11173)
 - [Eugene R Users](https://www.meetup.com/meetup-group-cwPiAlnB/)
 
 ### Data Science
