@@ -11,7 +11,7 @@ Welcome to Economics 524 (424): Prediction and machine-learning in econometrics,
 
 **Office hours**
 
-- **Ed Rubin** ?, PLC 530
+- **Ed Rubin** Mo., 3p–4p, PLC 530
 - **Ngan Tran** We., 2p–3p, PLC 428
 
 ## Syllabus
