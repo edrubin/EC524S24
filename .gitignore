@@ -4,7 +4,7 @@ lecture/00[2-9]*
 lecture/010*
 
 # Temporary holds: Projects
-projects*
+projects/project-*
 
 # Exams
 exam/in-class/*
