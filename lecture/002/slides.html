@@ -4,12 +4,13 @@
     <title>Lecture .mono[002]</title>
     <meta charset="utf-8" />
     <meta name="author" content="Edward Rubin" />
-    <link href="002-slides_files/remark-css-0.0.1/default.css" rel="stylesheet" />
-    <link href="002-slides_files/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
-    <link href="002-slides_files/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
-    <link href="002-slides_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
-    <script src="002-slides_files/tile-view-0.2.6/tile-view.js"></script>
-    <script src="002-slides_files/xaringanExtra_fit-screen-0.2.6/fit-screen.js"></script>
+    <script src="slides_files/header-attrs-2.26/header-attrs.js"></script>
+    <link href="slides_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="slides_files/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="slides_files/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link href="slides_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
+    <script src="slides_files/tile-view-0.2.6/tile-view.js"></script>
+    <script src="slides_files/xaringanExtra_fit-screen-0.2.6/fit-screen.js"></script>
     <link rel="stylesheet" href="my-css.css" type="text/css" />
   </head>
   <body>
@@ -129,27 +130,27 @@ A very simple, univariate dataset `\(\left(\mathbf{y},\, \mathbf{x} \right)\)`
 
 
 
-&lt;img src="002-slides_files/figure-html/graph loss 1-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="slides_files/figure-html/graph loss 1-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 ... on which we run a .pink[simple linear regression].
 
-&lt;img src="002-slides_files/figure-html/graph loss 2-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="slides_files/figure-html/graph loss 2-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 Each point `\(\left( y_i,\, x_i \right)\)` has an associated .grey-mid[loss] (error).
 
-&lt;img src="002-slides_files/figure-html/graph loss 3-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="slides_files/figure-html/graph loss 3-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 The L1 loss function weights all errors equally: `\(\sum_i \big| y_i - \hat{y}_i \big|\)`
 
-&lt;img src="002-slides_files/figure-html/graph loss 4-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="slides_files/figure-html/graph loss 4-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 The L2 loss function .it[upweights] large weights: `\(\sum_i \left( y_i - \hat{y}_i \right)^2\)`
 
-&lt;img src="002-slides_files/figure-html/graph loss 5-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="slides_files/figure-html/graph loss 5-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 name: overfitting
@@ -185,11 +186,11 @@ name: ex-nonlinear-splines
 
 .hi-slate[Training data] and example models (splines)
 
-&lt;img src="002-slides_files/figure-html/plot data for flexibility-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="slides_files/figure-html/plot data for flexibility-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 
-&lt;img src="002-slides_files/figure-html/plot flexibility-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="slides_files/figure-html/plot flexibility-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 The previous example has a pretty nonlinear relationship.
@@ -206,11 +207,11 @@ name: ex-linear-splines
 
 .hi-slate[Training data] and example models (splines)
 
-&lt;img src="002-slides_files/figure-html/plot data for linear flexibility-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="slides_files/figure-html/plot data for linear flexibility-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 
-&lt;img src="002-slides_files/figure-html/plot linear flexibility-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="slides_files/figure-html/plot linear flexibility-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 layout: true
@@ -296,7 +297,7 @@ class: clear, middle
 .b[U-shaped test MSE] w.r.t. model flexibility
 &lt;br&gt;Increases in variance eventually overcome reductions in (squared) bias.
 
-&lt;img src="002-slides_files/figure-html/plot flexibility again-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="slides_files/figure-html/plot flexibility again-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 # Model accuracy
@@ -423,19 +424,19 @@ class: clear, middle
 ---
 name: ex-bayes
 The .hi-pink[Bayes decision boundary] between classes .orange[A] and .navy[B]
-&lt;img src="002-slides_files/figure-html/plot bayes boundary-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="slides_files/figure-html/plot bayes boundary-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 Now we sample...
-&lt;img src="002-slides_files/figure-html/plot bayes sample-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="slides_files/figure-html/plot bayes sample-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 ... and our sample gives us an .hi-purple[estimated decision boundary].
-&lt;img src="002-slides_files/figure-html/plot bayes est boundary-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="slides_files/figure-html/plot bayes est boundary-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 And a new sample gives us another .hi-turquoise[estimated decision boundary].
-&lt;img src="002-slides_files/figure-html/plot bayes est boundary 2-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="slides_files/figure-html/plot bayes est boundary 2-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -487,7 +488,7 @@ name: ex-knn
 class: clear, middle
 
 Decision boundaries: .hi-pink[Bayes], .hi-purple[K=1], and .hi-turquoise[K=60]
-&lt;img src="002-slides_files/figure-html/plot knn k-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="slides_files/figure-html/plot knn k-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 class: clear, middle
@@ -559,6 +560,8 @@ These notes draw upon
 
 ---
 exclude: true
+
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
