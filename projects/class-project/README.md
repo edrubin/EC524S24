@@ -26,8 +26,11 @@ By midnight on **June 3rd**, submit **two documents** on Canvas (share links or 
 
 | Topic | Name |
 |:---------|:---------|
-| Time-series forecasting (Prophet?) | Ryan Denton |
+| Time-series forecasting with Prophet | Ryan Denton |
 | Stochastic gradient boosting | Anthony Xu |
+| eXtreme Gradient Boosting | Becky Driver |
+| Transformer-Based Language Models | Amit Das |
+| Bayesian machine learning methods | Christie Downs |
 
 ## Some ideas for topics
 
