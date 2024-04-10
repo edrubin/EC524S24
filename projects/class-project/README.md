@@ -31,6 +31,7 @@ By midnight on **June 3rd**, submit **two documents** on Canvas (share links or 
 | eXtreme Gradient Boosting | Becky Driver |
 | Transformer-Based Language Models | Amit Das |
 | Bayesian machine learning methods | Christie Downs |
+| Adversarial machine learning | Elyse St Sauver |
 
 ## Some ideas for topics
 
