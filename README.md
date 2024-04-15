@@ -191,7 +191,7 @@ Welcome to Economics 524 (424): Prediction and machine-learning in econometrics,
 
 Planned projects
 
-**000** [Predicting sales price in housing data (Kaggle)](https://github.com/edrubin/EC524W23/tree/master/projects/project-000)
+**000** [Predicting sales price in housing data (Kaggle)](https://github.com/edrubin/EC524S24/tree/master/projects/project-000)
 
 Due: 20 April 2024 (submit on Canvas)
 
