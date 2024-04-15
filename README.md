@@ -193,7 +193,7 @@ Planned projects
 
 **000** [Predicting sales price in housing data (Kaggle)](https://github.com/edrubin/EC524W23/tree/master/projects/project-000)
 
-Due: TBA 
+Due: 20 April 2024 (submit on Canvas)
 
 **Help:** 
 

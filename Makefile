@@ -8,6 +8,7 @@ lec000 : lecture/000/slides.html lecture/000/slides.pdf
 lec001 : lecture/001/slides.html lecture/001/slides.pdf
 lec002 : lecture/002/slides.html lecture/002/slides.pdf
 lec003 : lecture/003/slides.html lecture/003/slides.pdf
+lec004 : lecture/004/slides.html lecture/004/slides.pdf
 
 # Define individual links ------------------------------------------------------
 # Build syllabus
@@ -33,9 +34,14 @@ lecture/003/slides.html : lecture/003/slides.rmd
 	Rscript -e "rmarkdown::render('$<')"
 lecture/003/slides.pdf : lecture/003/slides.html
 	Rscript -e "pagedown::chrome_print('$<', wait = 4, timeout = 120)"
+# Lecture 04
+lecture/004/slides.html : lecture/004/slides.rmd
+	Rscript -e "rmarkdown::render('$<')"
+lecture/004/slides.pdf : lecture/004/slides.html
+	Rscript -e "pagedown::chrome_print('$<', wait = 4, timeout = 120)"
 
 # Global targets ---------------------------------------------------------------
-lec-all: lec000 lec001 lec002 lec003
+lec-all: lec000 lec001 lec002 lec003 lec004
 all: lec-all syllabus
 # Define clean
 clean:
