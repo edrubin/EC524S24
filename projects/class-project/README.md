@@ -32,6 +32,12 @@ By midnight on **June 3rd**, submit **two documents** on Canvas (share links or 
 | Transformer-Based Language Models | Amit Das |
 | Bayesian machine learning methods | Christie Downs |
 | Adversarial machine learning | Elyse St Sauver |
+| Image/facial recognition | Gabe Liebman |
+| Neural networks | Sean M |
+| Deep neural nets | Julia |
+| Reinforcement learning | Reece Blagdon |
+| Transfer learning | Nick K |
+| NLP | Ian Finn |
 
 ## Some ideas for topics
 
