@@ -38,6 +38,7 @@ By midnight on **June 3rd**, submit **two documents** on Canvas (share links or 
 | Reinforcement learning | Reece Blagdon |
 | Transfer learning | Nick K |
 | NLP | Ian Finn |
+| Discriminant analysis | Elena Breedlove |
 
 ## Some ideas for topics
 
