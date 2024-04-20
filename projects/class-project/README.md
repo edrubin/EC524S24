@@ -39,6 +39,7 @@ By midnight on **June 3rd**, submit **two documents** on Canvas (share links or 
 | Transfer learning | Nick K |
 | NLP | Ian Finn |
 | Discriminant analysis | Elena Breedlove |
+| Maximum likelihood estimation | Will Grossman |
 
 ## Some ideas for topics
 
