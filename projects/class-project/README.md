@@ -34,12 +34,15 @@ By midnight on **June 3rd**, submit **two documents** on Canvas (share links or 
 | Adversarial machine learning | Elyse St Sauver |
 | Image/facial recognition | Gabe Liebman |
 | Neural networks | Sean M |
-| Deep neural nets | Julia |
+| Deep neural nets | Julia Dragu |
 | Reinforcement learning | Reece Blagdon |
 | Transfer learning | Nick K |
 | NLP | Ian Finn |
 | Discriminant analysis | Elena Breedlove |
 | Maximum likelihood estimation | Will Grossman |
+| Non-IID sampling (clustering) | Katee Early |
+| Pattern tracking in satellite imagery | Ethan Drake |
+| Clustering algorithms in unsupervised learning | Erik Johnson |
 
 ## Some ideas for topics
 

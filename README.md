@@ -335,6 +335,7 @@ Housing data [download](https://github.com/edrubin/EC524W22/raw/master/lab/001-c
 
 ### Data Science
 
+- [Happy Git and GitHub for the useR](https://happygitwithr.com/) by Jenny Bryan, the "STAT 545 TAs", and Jim Hester
 - [Python Data Science Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/) by Jake VanderPlas
 - [Elements of AI](https://course.elementsofai.com/)
 - [Caltech professor Yaser Abu-Mostafa: Lectures about machine learning on YouTube](https://www.youtube.com/user/caltech/search?query=Yaser+Abu-Mostafa)
