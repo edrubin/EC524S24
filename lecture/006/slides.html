@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Lecture .mono[006]</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Edward Rubin" />
+    <script src="slides_files/header-attrs-2.26/header-attrs.js"></script>
+    <link href="slides_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="slides_files/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="slides_files/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link href="slides_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
+    <script src="slides_files/tile-view-0.2.6/tile-view.js"></script>
+    <script src="slides_files/xaringanExtra_fit-screen-0.2.6/fit-screen.js"></script>
+    <script src="slides_files/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+    <link href="slides_files/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+    <script src="slides_files/datatables-binding-0.33/datatables.js"></script>
+    <script src="slides_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+    <link href="slides_files/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="slides_files/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+    <script src="slides_files/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+    <link href="slides_files/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+    <script src="slides_files/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+    <link rel="stylesheet" href="my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Lecture .mono[006]
+]
+.subtitle[
+## Classification
+]
+.author[
+### Edward Rubin
+]
+
+---
+
+exclude: true
+
+
+
+---
+layout: true
+# Admin
+
+---
+class: inverse, middle
+
+---
+name: admin-today
+## Material
+
+.b[Last time] 
+- `tidymodels`
+- Shrinkage methods
+  - Ridge regression 🏔
+  - (The) lasso 🤠
+  - Elasticnet 🥅
+
+.b[Today] Classification methods
+- Introduction to classification
+- Linear probability models
+- Logistic regression
+
+---
+name: admin-soon
+
+## Upcoming
+
+.b[Readings] .note[Today] .it[ISL] Ch. 4
+
+.b[Problem sets]
+- .it[Cross validation and shrinkage] Due Saturday? (4/4)
+- .it[Classification] After that
+
+---
+layout: true
+# Classification
+
+---
+class: inverse, middle
+
+---
+name: intro
+## Intro
+
+.attn[Regression problems] seek to predict the number an outcome will take—integers (_e.g._, number of cats), reals (_e.g._, home/cat value), _etc._ .super[.pink[†]]
+
+.footnote[
+.pink[†] Maybe: Binary indicators...
+]
+
+--
+
+.attn[Classification problems] instead seek to predict the category of an outcome
+
+- .b[Binary outcomes]&lt;br&gt;success/failure; true/false; A or B; cat or .it[not cat];  _etc._
+
+- .b[Multi-class outcomes]&lt;br&gt;yes, no, .it[or maybe]; colors; letters; type of cat;.super[.pink[††]] _etc._
+
+.footnote[
+.tran[† Maybe: Binary indicators...] .pink[††] It turns out, all of machine learning is about cats.
+]
+
+This type of outcome is often called a .it[qualitative] or .it[categorical] response.
+
+---
+name: examples
+## Examples
+
+For the past few weeks, we've been immersed in regression problems.
+
+It's probably helpful to mention a few .hi[examples of classification problems].
+
+--
+
+- Using life/criminal history (and demographics?):&lt;br&gt;Can we predict whether a defendant is .b[granted bail]?
+
+--
+
+- Based upon a set of symptoms and observations:&lt;br&gt;Can we predict a patient's .b[medical condition](s)?
+
+--
+
+- From the pixels in an image:&lt;br&gt;Can we classify images as .b[bagel, puppy, or other]?
+
+---
+## Approach
+
+One can imagine two.super[.pink[†]] related .hi[approaches to classification]
+
+.footnote[
+.pink[†] At least.
+]
+
+
+1. Predict .b[which category] the outcome will take.
+
+1. Estimate the .b[probability of each category] for the outcome.
+
+--
+
+That said, the general approach will
+
+- Take a set of training observations `\((x_1,y_1),\, (x_2,y_2),\,\ldots,\,(x_n,y_n)\)`
+- Build a classifier `\(\hat{y}_o=\mathop{f}(x_o)\)`
+
+all while balancing bias and variance..super[.pink[††]]
+
+.footnote[
+.tran[† At least.] .pink[††] Sound familiar?
+]
+
+---
+layout: false
+class: clear, middle
+
+.qa[Q] If everything is so similar, can't we use regression methods?
+
+.white[No]
+
+---
+class: clear, middle
+
+.qa[Q] If everything is so similar, can't we use regression methods?
+
+.qa[A] .it[Sometimes.]
+--
+ .it[Other times:] No.
+--
+ Plus you still need new tools.
+
+---
+layout: true
+# Classification
+## Why not regression?
+
+---
+name: no-regress
+
+Regression methods are not made to deal with .b[multiple categories].
+
+.ex[Ex.] Consider three medical diagnoses: .pink[stroke], .purple[overdose], and .orange[seizure].
+
+Regression needs a numeric outcome—how should we code our categories?
+
+--
+
+.left-third[
+.center.note[Option 1]
+`$$Y=\begin{cases}
+  \displaystyle 1 &amp; \text{if }\color{#e64173}{\text{ stroke}} \\
+  \displaystyle 2 &amp; \text{if }\color{#6A5ACD}{\text{ overdose}} \\
+  \displaystyle 3 &amp; \text{if }\color{#FFA500}{\text{ seizure}} \\
+\end{cases}$$`
+]
+
+--
+
+.left-third[
+.center.note[Option 2]
+`$$Y=\begin{cases}
+  \displaystyle 1 &amp; \text{if }\color{#6A5ACD}{\text{ overdose}} \\
+  \displaystyle 2 &amp; \text{if }\color{#e64173}{\text{ stroke}} \\
+  \displaystyle 3 &amp; \text{if }\color{#FFA500}{\text{ seizure}} \\
+\end{cases}$$`
+]
+
+--
+
+.left-third[
+.center.note[Option 3]
+`$$Y=\begin{cases}
+  \displaystyle 1 &amp; \text{if }\color{#FFA500}{\text{ seizure}} \\
+  \displaystyle 2 &amp; \text{if }\color{#e64173}{\text{ stroke}} \\
+  \displaystyle 3 &amp; \text{if }\color{#6A5ACD}{\text{ overdose}} \\
+\end{cases}$$`
+]
+
+--
+
+The categories' ordering is unclear—let alone the actual valuation.
+&lt;br&gt;
+The choice of ordering and valuation can affect predictions. 😿
+
+---
+
+As we've seen, .b[binary outcomes] are simpler.
+
+--
+
+.ex[Ex] If we are only choosing between .pink[stroke] and .purple[overdose]
+
+.left-wide[
+.center.note[Option 1]
+`$$Y=\begin{cases}
+  \displaystyle 0 &amp; \text{if }\color{#e64173}{\text{ stroke}} \\
+  \displaystyle 1 &amp; \text{if }\color{#6A5ACD}{\text{ overdose}} \\
+\end{cases}$$`
+]
+.left-thin.center[&lt;br&gt;&lt;br&gt;.center[and]]
+.left-wide[
+.center.note[Option 2]
+`$$Y=\begin{cases}
+  \displaystyle 0 &amp; \text{if }\color{#6A5ACD}{\text{ overdose}} \\
+  \displaystyle 1 &amp; \text{if }\color{#e64173}{\text{ stroke}} \\
+\end{cases}$$`
+]
+
+.clear-up[
+will provide the same results.
+]
+
+---
+name: lpm
+
+In these .b[binary outcome] cases, we .it[can] apply linear regression.
+
+These models are called .attn[linear probability models] (LPMs).
+
+The .b[predictions] from an LPM
+
+1. estimate the conditional probability `\(y_i = 1\)`, _i.e._, `\(\mathop{\text{Pr}}\left(y_o = 1 \mid x_o\right)\)`
+
+1. are not restricted to being between 0 and 1.super[.pink[†]]
+
+1. provide an ordering—and a reasonable estimate of probability
+
+.footnote[
+.pink[†] Some people get very worked up about this point.
+]
+
+--
+
+.note[Other benefits:] Coefficients are easily interpreted + we know how OLS works.
+
+---
+layout: true
+class: clear, middle
+
+---
+
+Let's consider an example: the `Default` dataset from `ISLR`
+
+<div class="datatables html-widget html-fill-item" id="htmlwidget-62322b30683bf1b7f530" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-62322b30683bf1b7f530">{"x":{"filter":"none","vertical":false,"data":[["No","No","Yes","No","No","Yes","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","Yes","No","No","No","No","No","No","No","No","No"],["No","Yes","No","No","No","No","No","No","No","No","Yes","No","No","Yes","Yes","No","Yes","No","Yes","No","No","No","No","Yes","Yes","Yes","Yes","Yes","No","Yes","No","No","No","Yes","No","No","No","Yes","No","No","Yes","No","No","Yes","No","No","Yes","No","No","No","No","No","No","No","Yes","No","Yes","No","Yes","No","No","No","No","No","Yes","No","Yes","No","No","No","No","No","No","No","Yes","No","No","No","No","No","Yes","Yes","No","No","Yes","No","Yes","No","No","No","No","Yes","Yes","No","No","No","Yes","No","No","Yes"],[939.0985018354309,397.5424884519605,1511.610951964693,301.3194028071094,878.4461098782666,1673.486349155621,310.1302238833257,1272.053891300723,887.201436107651,230.8689248449142,421.9572648185125,1057.35087177407,891.4032409541946,1216.58625032905,522.3811805986095,1558.86107533,1464.394790154939,740.8851865608207,0,1734.228043748413,1155.175005887897,728.3560584708137,991.0609684790284,640.8190408580517,539.8347930885018,141.0265496256421,1207.052482637558,1288.448559957073,523.7088979014105,1182.000081605817,1502.757748679735,131.6339982505933,311.8892887378231,1200.624470936216,770.4319619241542,1177.249598499503,728.2125496839541,1941.902928141677,0,674.204629620179,999.3916963942365,670.4225823342022,350.051851978195,764.6277906742362,401.180757478873,751.3543919336441,1360.865632701732,497.8819052435423,634.6961045278987,157.6604750712598,0,605.2209683061436,1092.99815937252,650.0070412876373,492.657068547904,1322.969041672515,1743.798837362315,509.3708922308093,1417.225498777783,1189.752133620907,1642.192318609752,1013.963745945142,678.0189215877523,522.1534576379499,127.6633751251043,800.6093328485044,2092.458530116103,182.3704599942638,1507.249194600523,382.8850623715487,768.3785848113597,0,934.9697034577234,621.3127191862941,1384.737597046752,131.7470759633381,772.7320740902168,364.6630512034679,612.9606530426692,431.5360551781043,847.0564853011838,965.5873700854856,932.0569662927189,779.6573003104764,1151.733317289288,368.0861670012055,1458.893461522723,202.321208104165,1416.444769899192,615.7042765604052,1807.684490703225,840.9889092025372,677.552825772912,1073.16853283521,932.8729980408855,1088.488096325313,1508.701776060816,1238.105176980861,309.5179821269853,1169.420444359619],[45519.01897673428,22710.86574013209,53506.94492602869,51539.9523173009,29561.78307606825,49310.33290747207,37697.22019032822,44895.59330050426,41641.45357201225,32798.78259148451,21744.97423618184,39651.12350772198,46611.73163625492,18140.62399343682,23440.06422258846,45255.96711305983,13968.50800557713,34196.06745536202,9321.463734315099,37621.63317230753,40398.39934654717,32388.61575963061,37597.32306437573,19055.91652742726,13119.68585491529,11314.39178062314,24747.88996926526,21216.96257371123,48091.74453096581,18102.83374871605,53129.78303943958,42028.00859873329,46116.13152572708,18973.90768181914,53398.31472792329,35419.61030976215,50403.55925120777,23467.12696609398,33781.65630869925,46481.95267986992,23688.64896879458,53666.19233879355,48411.98668353662,26188.06949505082,39686.67594849676,27179.76165311957,22310.92950944678,55543.6246875475,32594.69223493258,42125.73361099773,24892.91568773994,21792.32151997167,37351.33965900046,41427.87732175281,10154.15626247255,51956.29182825578,17541.00286620166,39546.47264390183,16053.97426362752,50838.51721804854,24444.31217514675,49653.79712549604,59416.77886478844,40717.16252193945,13942.24411909447,50324.55492679623,14514.76995863732,45507.93369659741,24057.51794458949,42620.53022958289,43325.97039015986,30360.54894381945,42325.7499854437,39372.07719093793,23083.66708669217,36947.77861801913,47161.27670030983,10239.97248544231,43392.88708933901,46941.05894409835,13741.32706720535,16440.0996975194,45505.30722428366,40804.47570337459,23149.5474930787,51601.36084456928,21186.56295535441,37188.56938421231,33099.49688434578,39376.3946187014,42308.95445370471,15406.20741096067,20745.01532562462,51668.96083054713,61192.89713166657,38171.37207335723,25338.26468598012,37544.94212897339,35293.19357062187,19879.24816986924]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>default<\/th>\n      <th>student<\/th>\n      <th>balance<\/th>\n      <th>income<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\", null);\n  }"},{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 0, 3, \",\", \".\", null);\n  }"},{"className":"dt-right","targets":[2,3]},{"name":"default","targets":0},{"name":"student","targets":1},{"name":"balance","targets":2},{"name":"income","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render"],"jsHooks":[]}</script>
+
+---
+exclude: true
+
+
+
+---
+
+.hi-purple[The data:] The outcome, default, only takes two values (only 3.3% default).
+
+&lt;img src="slides_files/figure-html/boxplot-default-balance-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+.hi-purple[The data:] The outcome, default, only takes two values (only 3.3% default).
+
+&lt;img src="slides_files/figure-html/plot-default-points-1.svg" style="display: block; margin: auto;" /&gt;
+---
+
+.hi-pink[The linear probability model] struggles with prediction in this setting.
+
+&lt;img src="slides_files/figure-html/plot-default-lpm-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+.hi-orange[Logistic regression] .it[appears] to offer an improvement.
+
+&lt;img src="slides_files/figure-html/plot-default-logistic-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+So... what's logistic regression?
+
+---
+layout: true
+# Logistic regression
+
+---
+class: inverse, middle
+
+---
+name: logistic-intro
+## Intro
+
+.attn[Logistic regression] .b[models the probability] that our outcome `\(Y\)` belongs to a .b[specific category] (often whichever category we think of as `TRUE`).
+
+--
+
+For example, we just saw a graph where
+$$
+`\begin{align}
+  \mathop{\text{Pr}}\left(\text{Default} = \text{Yes} | \text{Balance}\right) = p(\text{Balance})
+\end{align}`
+$$
+we are modeling the probability of `default` as a function of `balance`.
+
+--
+
+We use the .b[estimated probabilities] to .b[make predictions], _e.g._,
+- if `\(p(\text{Balance})\geq 0.5\)`, we could predict "Yes" for Default
+- to be conservative, we could predict "Yes" if `\(p(\text{Balance})\geq0.1\)`
+
+---
+name: logistic-logistic
+## What's .it[logistic]?
+
+We want to model probability as a function of the predictors `\(\left(\beta_0 + \beta_1 X\right)\)`.
+
+.col-centered[
+.hi-pink[Linear probability model]
+&lt;br&gt;
+.pink[linear] transform. of predictors
+
+$$
+`\begin{align}
+  p(X) = \beta_0 + \beta_1 X
+\end{align}`
+$$
+]
+
+.col-centered[
+.hi-orange[Logistic model]
+&lt;br&gt;
+.orange[logistic] transform. of predictors
+
+$$
+`\begin{align}
+  p(X) = \dfrac{e^{\beta_0 + \beta_1 X}}{1 + e^{\beta_0 + \beta_1 X}}
+\end{align}`
+$$
+]
+
+.clear-up[
+What does this .it[logistic function] `\(\left(\frac{e^x}{1+e^x}\right)\)` do?
+]
+
+1. ensures predictions are between 0 `\((x\rightarrow-\infty)\)` and 1 `\((x\rightarrow\infty)\)`
+
+1. forces an S-shaped curved through the data (not linear)
+
+---
+## What's .it[logistic]?
+
+With a little math, you can show
+$$
+`\begin{align}
+  p(X) = \dfrac{e^{\beta_0 + \beta_1 X}}{1 + e^{\beta_0 + \beta_1 X}} \implies \color{#e64173}{\log \left( \dfrac{p(X)}{1-p(X)}\right)} = \color{#6A5ACD}{\beta_0 + \beta_1 X}
+\end{align}`
+$$
+
+.note[New definition:] .hi-pink[log odds].super[.pink[†]] on the RHS and .hi-purple[linear predictors] on the LHS.
+
+.footnote[
+.pink[†] The "log odds" is sometimes called "logit".
+]
+
+
+--
+
+1. .b[interpretation] of `\(\beta_j\)` is about .pink[log odds]—not probability
+
+--
+
+1. .b[changes in probability] due to `\(X\)` depend on level of `\(X\)`.super[.pink[††]]
+
+.footnote[
+.tran[† The "log odds" is sometimes called "logit".] .pink[††] It's nonlinear!
+]
+
+---
+name: logistic-estimation
+## Estimation
+
+Before we can start predicting, we need to estimate the `\(\beta_j\)`s.
+$$
+`\begin{align}
+  p(X) = \dfrac{e^{\beta_0 + \beta_1 X}}{1 + e^{\beta_0 + \beta_1 X}} \implies \color{#e64173}{\log \left( \dfrac{p(X)}{1-p(X)}\right)} = \color{#6A5ACD}{\beta_0 + \beta_1 X}
+\end{align}`
+$$
+
+We estimate logistic regression using .attn[maximum likelihood estimation].
+
+--
+
+.attn[Maximum likelihood estimation] (MLE) searches for the `\(\beta_j\)`s that make our data "most likely" given the model we've written.
+
+---
+name: logistic-mle
+## Maximum likelihood
+
+.attn[MLE] searches for the `\(\beta_j\)`s that make our data "most likely" using our model.
+
+$$
+`\begin{align}
+  \color{#e64173}{\log \left( \dfrac{p(X)}{1-p(X)}\right)} = \color{#6A5ACD}{\beta_0 + \beta_1 X}
+\end{align}`
+$$
+
+--
+
+1. `\(\color{#6A5ACD}{\beta_j}\)` tells us how `\(x_j\)` affects the .pink[log odds]
+
+--
+
+1. odds `\(= \dfrac{p(X)}{1-p(X)}\)`.
+--
+ If `\(p(X) &gt; 0.5\)`, then odds `\(&gt;1\)` and .pink[log odds] `\(&gt; 0\)`.
+
+--
+
+So we want choose `\(\color{#6A5ACD}{\beta_j}\)` such that
+- .pink[log odds] are above zero for observations where `\(y_i=1\)`
+- .pink[log odds] even larger for areas of `\(x_j\)` where most `\(i\)`s have `\(y_i=1\)`
+
+---
+## Formally: The likelihood function
+
+We estimate logistic regression by maximizing .attn[the likelihood function].super[.pink[†]]
+
+.footnote[
+.pink[†] Generally, we actually will maximize the .it[log] of the likelihood function.
+]
+
+$$
+`\begin{align}
+  \mathop{\ell}(\beta_0,\beta_1) = \prod_{i:y_i=1} \mathop{p}(x_i) \prod_{i:y_i=0} (1-\mathop{p}(x_i))
+\end{align}`
+$$
+
+The likelihood function is maximized by
+- making `\(p(x_i)\)` large for individuals with `\(y_i = 1\)`
+- making `\(p(x_i)\)` small for individuals with `\(y_i = 0\)`
+
+.it[Put simply:] Maximum likelihood maximizes a predictive performance, conditional on the model we have written down.
+
+---
+name: logistic-r
+## In R
+
+In R, you can run logistic regression using the `glm()` function.
+
+Also: `logistic_reg()` in the `tidymodels` galaxy (with the `"glm"` engine).
+
+--
+
+.note[Aside:] Related to `lm`, `glm` stands for .it[generalized] (linear model).
+
+--
+
+"Generalized" essentially means that we're applying some transformation to `\(\beta_0 + \beta_1 X\)` like logistic regression applies the logistic function.
+
+More generally: $$\color{#FFA500}{\mathbf{y}} = \color{#20B2AA}{g}^{-1} \left( \color{#6A5ACD}{\mathbf{X}} \color{#e64173}{\beta} \right) \iff \color{#20B2AA}{g}(\color{#FFA500}{\mathbf{y}}) = \color{#6A5ACD}{\mathbf{X}} \color{#e64173}{\beta} $$
+
+---
+## In R
+
+In R, you can run logistic regression using the `glm()` function.
+
+.b[Key arguments] (very similar to `lm()`)
+
+- specify a `formula`,.super[.pink[†]] _e.g._, `y ~ .` or `y ~ x + I(x^2)`
+
+- define `family = "binomial"` (so R knows to run logistic regression)
+
+- give the function some `data`
+
+.footnote[
+.pink[†] Notice that we're back in the world of needing to select a model...
+]
+
+--
+
+
+```r
+est_logistic = glm(
+  i_default ~ balance,
+* family = "binomial",
+  data = default_df
+)
+```
+
+---
+layout: false
+class: clear
+
+
+```r
+est_logistic %&gt;% summary()
+```
+
+```
+#&gt; 
+#&gt; Call:
+#&gt; glm(formula = i_default ~ balance, family = "binomial", data = default_df)
+#&gt; 
+#&gt; Coefficients:
+#&gt;               Estimate Std. Error z value Pr(&gt;|z|)    
+#&gt; (Intercept) -1.065e+01  3.612e-01  -29.49   &lt;2e-16 ***
+#&gt; balance      5.499e-03  2.204e-04   24.95   &lt;2e-16 ***
+#&gt; ---
+*#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+*#&gt; 
+*#&gt; (Dispersion parameter for binomial family taken to be 1)
+#&gt; 
+#&gt;     Null deviance: 2920.6  on 9999  degrees of freedom
+#&gt; Residual deviance: 1596.5  on 9998  degrees of freedom
+#&gt; AIC: 1600.5
+#&gt; 
+#&gt; Number of Fisher Scoring iterations: 8
+```
+
+---
+layout: true
+# Logistic regression
+
+---
+name: logistic-prediction
+## Estimates and predictions
+
+
+
+Thus, our estimates are `\(\hat{\beta}_0 \approx -10.65\)` and `\(\hat{\beta}_1 \approx 0.0055\)`.
+
+.note[Remember:] These coefficients are for the .b[log odds].
+
+--
+
+If we want .hi[to make predictions] for `\(y_i\)` (whether or not `\(i\)` defaults),
+&lt;br&gt;then we first must .hi[estimate the probability] `\(\mathop{p}(\text{Balance})\)`
+$$
+`\begin{align}
+  \hat{p}(\text{Balance}) = \dfrac{e^{\hat{\beta}_0 + \hat{\beta}_1 \text{Balance}}}{1 + e^{\hat{\beta}_0 + \hat{\beta}_1 \text{Balance}}}
+  \approx
+  \dfrac{e^{-10.65 + 0.0055 \cdot \text{Balance}}}{1 + e^{-10.65 + 0.0055 \cdot \text{Balance}}}
+\end{align}`
+$$
+
+--
+
+- If `\(\text{Balance} = 0\)`, we then estimate `\(\mathop{\hat{p}} \approx 0.000024\)`
+- If `\(\text{Balance} = 2,000\)`, we then estimate `\(\mathop{\hat{p}} \approx 0.586\)`
+- If `\(\text{Balance} = 3,000\)`, we then estimate `\(\mathop{\hat{p}} \approx 0.997\)` .super[.pink[†]]
+
+.footnote[
+.pink[†] You get a sense of the nonlinearity of the predictors' effects.
+]
+
+---
+layout: false
+class: clear, middle
+
+.hi-orange[Logistic regression]'s predictions of `\(\mathop{p}(\text{Balance})\)`
+
+&lt;img src="slides_files/figure-html/plot-default-logistic-2-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+class: clear, middle
+
+.note[Note:] Everything we've done so far extends to models with many predictors.
+
+---
+layout: true
+# Logistic regression
+## Prediction
+
+--
+
+.note[Old news:] You can use `predict()` to get predictions out of `glm` objects.
+
+.b[New and important:] `predict()` produces multiple `type`.small[s] of predictions
+
+1. `type = "response"` predicts .it[on the scale of the response variable]
+&lt;br&gt;for logistic regression, this means .b[predicted probabilities] (0 to 1)
+
+1. `type = "link"` predicts .it[on the scale of the linear predictors]
+&lt;br&gt;for logistic regression, this means .b[predicted log odds] (-∞ to ∞)
+
+.attn[Beware:] The default is `type = "link"`, which you may not want.
+
+---
+
+Putting it all together, we can get (estimated) probabilities `\(\hat{p}(X)\)`
+
+
+```r
+# Predictions on scale of response (outcome) variable
+p_hat = predict(est_logistic, type = "response")
+```
+
+which we can use to make predictions on `\(y\)`
+
+
+```r
+# Predict '1' if p_hat is greater or equal to 0.5
+y_hat = as.numeric(p_hat &gt;= 0.5)
+```
+
+---
+layout: false
+class: clear, middle
+
+So how did we do?
+
+---
+layout: true
+# Assessment
+
+---
+class: inverse, middle
+
+---
+name: how
+## How did we do?
+
+We guessed 97.25% of the observations correctly.
+
+--
+
+.qa[Q] 97.25% is pretty good, right?
+
+--
+
+.qa[A] It depends...
+--
+ Remember that 3.33% of the observations actually defaulted.
+--
+&lt;br&gt;So we would get 96.67% right by guessing "No" for everyone..super[.pink[†]]
+
+.footnote[
+.pink[†] This idea is called the .it[null classifier].
+]
+
+
+--
+
+
+
+We .it[did] guess 30.03% of the defaults
+--
+, which is clearer better than 0%.
+
+--
+
+.qa[Q] How can we more formally assess our model's performance?
+
+--
+
+.qa[A] All roads lead to the .attn[confusion matrix].
+
+---
+name: confusion
+## The confusion matrix
+
+The .attn[confusion matrix] is us a convenient way to display
+&lt;br&gt;.hi-orange[correct] and .hi-purple[incorrect] predictions for each class of our outcome.
+
+
+
+<table class="huxtable" data-quarto-disable-processing="true" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:cm-right-wrong">
+<col><col><col><col><tr>
+<td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></td><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><td colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Truth</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></td><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 1pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">No</td><td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 1pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Yes</td></tr>
+<tr>
+<td rowspan="2" style="vertical-align: middle; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Prediction</td><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 1pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">No</th><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 0pt 0pt 1pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><span style="color: rgb(255, 165, 0);">True Negative (TN)</span></td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><span style="color: rgb(106, 90, 205);">False Negative (FN)</span></td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 1pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Yes</th><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 1pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><span style="color: rgb(106, 90, 205);">False Positive (FP)</span></td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><span style="color: rgb(255, 165, 0);">True Positive (TP)</span></td></tr>
+</table>
+
+
+--
+
+The .attn[accuracy] of a method is the share of .orange[correct] predictions, _i.e._,
+.center[
+.b[Accuracy] = (.hi-orange[TN] + .hi-orange[TP]) / (.hi-orange[TN] + .hi-orange[TP] + .hi-purple[FN] + .hi-purple[FP])
+]
+
+--
+
+This matrix also helps display many other measures of assessment.
+
+---
+## The confusion matrix
+
+.attn[Sensitivity:] the share of positive outcomes `\(Y=1\)` that we correctly predict.
+
+.center[
+.b[Sensitivity] = .hi-orange[TP] / (.hi-orange[TP] + .hi-purple[FN])
+]
+
+<table class="huxtable" data-quarto-disable-processing="true" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:cm-sensitivity">
+<col><col><col><col><tr>
+<td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></td><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><td colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Truth</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></td><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 1pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">No</td><td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 1pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"><span style="color: rgb(106, 90, 205);">Yes</span></td></tr>
+<tr>
+<td rowspan="2" style="vertical-align: middle; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Prediction</td><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 1pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">No</th><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 0pt 0pt 1pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">True Negative (TN)</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><span style="color: rgb(106, 90, 205);">False Negative (FN)</span></td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 1pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Yes</th><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 1pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">False Positive (FP)</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><span style="color: rgb(255, 165, 0);">True Positive (TP)</span></td></tr>
+</table>
+
+
+Sensitivity is also called .attn[recall] and the .attn[true-positive rate].
+
+One minus sensitivity is the .attn[type-II error rate].
+---
+## The confusion matrix
+
+.attn[Specificity:] the share of neg. outcomes `\((Y=0)\)` that we correctly predict.
+
+.center[
+.b[Specificity] = .hi-orange[TN] / (.hi-orange[TN] + .hi-purple[FP])
+]
+
+<table class="huxtable" data-quarto-disable-processing="true" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:cm-specificity">
+<col><col><col><col><tr>
+<td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></td><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><td colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Truth</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></td><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 1pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"><span style="color: rgb(106, 90, 205);">No</span></td><td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 1pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Yes</td></tr>
+<tr>
+<td rowspan="2" style="vertical-align: middle; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Prediction</td><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 1pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">No</th><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 0pt 0pt 1pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><span style="color: rgb(255, 165, 0);">True Negative (TN)</span></td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">False Negative (FN)</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 1pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Yes</th><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 1pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><span style="color: rgb(106, 90, 205);">False Positive (FP)</span></td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">True Positive (TP)</td></tr>
+</table>
+
+
+One minus specificity is the .attn[false-positive rate] or .attn[type-I error rate].
+
+---
+## The confusion matrix
+
+.attn[Precision:] the share of predicted positives `\((\hat{Y}=1)\)` that are correct.
+
+.center[
+.b[Precision] = .hi-orange[TP] / (.hi-orange[TP] + .hi-purple[FP])
+]
+
+<table class="huxtable" data-quarto-disable-processing="true" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:cm-precision">
+<col><col><col><col><tr>
+<td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></td><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><td colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Truth</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></td><th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 1pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">No</td><td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 1pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Yes</td></tr>
+<tr>
+<td rowspan="2" style="vertical-align: middle; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Prediction</td><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 1pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">No</th><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 0pt 0pt 1pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">True Negative (TN)</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">False Negative (FN)</td></tr>
+<tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 1pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"><span style="color: rgb(106, 90, 205);">Yes</span></th><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 1pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><span style="color: rgb(106, 90, 205);">False Positive (FP)</span></td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><span style="color: rgb(255, 165, 0);">True Positive (TP)</span></td></tr>
+</table>
+
+
+---
+## Which assessment?
+
+.qa[Q] So .it[which] criterion should we use?
+
+--
+
+.qa[A] You should use the .it[right] criterion for your context.
+
+- Are true positives more valuable than true negatives?
+--
+&lt;br&gt;.note[Sensitivity] will be key.
+
+--
+
+- Do you want to have high confidence in predicted positives?
+--
+&lt;br&gt;.note[Precision] is your friend
+
+--
+
+- Are all errors equal?
+--
+&lt;br&gt;
+.note[Accuracy] is perfect.
+
+--
+
+[There's a lot more](https://yardstick.tidymodels.org/reference/index.html), _e.g._, the .attn[F.sub[1] score] combines precision and sensitivity.
+
+---
+name: cm-r
+## Confusion in R
+
+[`conf_mat()` from `yardstick`](https://yardstick.tidymodels.org/reference/conf_mat.html) (`tidymodels`) calculates the confusion matrix.
+
+- `data`: a dataset (`factor` variables) of true values and predictions
+
+- `truth`: the name of the column (in `data`) of the truth values
+
+- `estimate`: the name of the column (in `data`) of our predictions
+
+--
+
+
+```r
+cm_logistic = conf_mat(
+  # Create a dataset of truth and predictions
+  data = tibble(
+    y_hat = y_hat %&gt;% as.factor(),
+    y = default_df$i_default %&gt;% as.factor()
+  ),
+  truth = y, estimate = y_hat
+)
+```
+
+---
+## Confusion in R
+
+[`conf_mat()` from `yardstick`](https://yardstick.tidymodels.org/reference/conf_mat.html) (`tidymodels`) calculates the confusion matrix.
+
+- `data`: a dataset (`factor` variables) of true values and predictions
+
+- `truth`: the name of the column (in `data`) of the truth values
+
+- `estimate`: the name of the column (in `data`) of our predictions
+
+
+```
+#&gt;           Truth
+#&gt; Prediction    0    1
+#&gt;          0 9625  233
+#&gt;          1   42  100
+```
+
+---
+layout: true
+# Assessment
+
+---
+## Thresholds
+
+Your setting also dictates the "optimal" threshold that moves a prediction from one class (_e.g._, Default = No) to another class (Default = Yes).
+
+The Bayes classifier suggests a probability threshold of 0.5.
+
+The Bayes classifier can't be beat in terms of .note[accuracy], but if you have goals other than accuracy, you should consider other thresholds.
+
+---
+name: thresholds
+layout: false
+class: clear
+
+As we vary the threshold, our error rates (types .hi-purple[I], .hi-orange[II], and .hi-slate[overall]) change.
+
+
+
+&lt;img src="slides_files/figure-html/plot-threshold-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+name: roc
+class: clear
+
+The .attn[ROC curve] plots the true- (TP/P) and the false-positive rates (FP/N).
+
+
+
+&lt;img src="slides_files/figure-html/plot-roc-1.svg" style="display: block; margin: auto;" /&gt;
+
+--
+
+"Best performance" means the .pink[ROC curve] hugs the top-left corner.
+
+---
+class: clear
+
+The .hi-orange[AUC] gives the .orange[area under the (ROC) curve].
+
+&lt;img src="slides_files/figure-html/plot-auc-1.svg" style="display: block; margin: auto;" /&gt;
+
+--
+
+"Best performance" means the .orange[AUC] is near 1. Random chance: 0.5
+
+---
+class: clear, middle
+
+.qa[Q] So what information is AUC telling us?
+
+.tran[.b[A] Nothing]
+
+---
+class: clear, middle
+
+.qa[Q] So what information is AUC telling us?
+
+.qa[A] AUC tells us how much we've .b[separated] the .it[positive] and .it[negative] labels.
+
+---
+layout: true
+class: clear
+
+
+---
+exclude: true
+
+
+
+---
+
+.ex[Example:] Distributions of probabilities for .hi-orange[negative] and .hi-purple[positive] outcomes.
+
+&lt;img src="slides_files/figure-html/roc-ex1-d-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+For any given .hi-pink[threshold]
+
+&lt;img src="slides_files/figure-html/roc-ex1-threshold-1.svg" style="display: block; margin: auto;" /&gt;
+---
+
+For any given .hi-pink[threshold], we get .hi-yellow[false positives]
+
+&lt;img src="slides_files/figure-html/roc-ex1-threshold2-1.svg" style="display: block; margin: auto;" /&gt;
+---
+
+For any given .hi-pink[threshold], we get false positives and .hi-yellow[true positives].
+
+&lt;img src="slides_files/figure-html/roc-ex1-threshold3-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+
+... moving through all possible thresholds generates the .hi-pink[ROC] (.hi-orange[AUC] ≈ 0.872).
+
+&lt;img src="slides_files/figure-html/roc-ex1-roc-1.svg" style="display: block; margin: auto;" /&gt;
+---
+
+Increasing separation between .hi-orange[negative] and .hi-purple[positive] outcomes...
+
+&lt;img src="slides_files/figure-html/roc-ex2-d-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+
+... reduces error (shifts .hi-pink[ROC]) and increases .hi-orange[AUC] (≈ 0.994).
+
+&lt;img src="slides_files/figure-html/roc-ex2-roc-1.svg" style="display: block; margin: auto;" /&gt;
+---
+
+Further increasing separation between .hi-orange[negative] and .hi-purple[positive] outcomes...
+
+&lt;img src="slides_files/figure-html/roc-ex3-d-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+
+... reduces error (shifts .hi-pink[ROC]) and increases .hi-orange[AUC] (≈ 1).
+
+&lt;img src="slides_files/figure-html/roc-ex3-roc-1.svg" style="display: block; margin: auto;" /&gt;
+---
+
+Tiny separation ("guessing") between .hi-orange[negative] and .hi-purple[positive] outcomes...
+
+&lt;img src="slides_files/figure-html/roc-ex4-d-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+
+... increases error (shifts .hi-pink[ROC]) and pushes .hi-orange[AUC] toward 0.5 (here ≈ 0.523).
+
+&lt;img src="slides_files/figure-html/roc-ex4-roc-1.svg" style="display: block; margin: auto;" /&gt;
+---
+
+Getting .hi-orange[negative] and .hi-purple[positive] outcomes backwards...
+
+&lt;img src="slides_files/figure-html/roc-ex5-d-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+
+... increases error (shifts .hi-pink[ROC]) and pushes .hi-orange[AUC] toward 0 (here ≈ 0.012).
+
+&lt;img src="slides_files/figure-html/roc-ex5-roc-1.svg" style="display: block; margin: auto;" /&gt;
+---
+name: extras
+layout: false
+# R extras
+
+.b[AUC] You can calculate AUC in R using the [`roc_auc()` function from `yardstick`](https://yardstick.tidymodels.org/reference/roc_auc.html). See the documentation for examples.
+
+.b[Logistic elasticnet] `glmnet()` (for ridge , lasso, and elasticnet) extends to logistic regression.super[.pink[†]] by specifying the `family` argument of `glmnet`, _e.g._,
+
+
+```r
+# Example of logistic regression with lasso
+logistic_lasso = glmnet(
+  y = y,
+  x = x,
+  family = "binomial",
+  alpha = 1,
+  lambda = best_lambda
+)
+```
+
+You can also use the `"glmnet"` engine for `logistic_reg()` in `parsnip`.
+
+.footnote[
+.pink[†] Or many other generalized linear models.
+]
+
+---
+name: sources
+layout: false
+# Sources
+
+These notes draw upon
+
+- [An Introduction to Statistical Learning](http://faculty.marshall.usc.edu/gareth-james/ISL/) (*ISL*)&lt;br&gt;James, Witten, Hastie, and Tibshirani
+
+- *[Receiver Operating Characteristic Curves Demystified (in Python)](https://towardsdatascience.com/receiver-operating-characteristic-curves-demystified-in-python-bd531a4364d0)*
+---
+# Table of contents
+
+.col-left[
+.smallest[
+#### Admin
+- [Today](#admin-today)
+- [Upcoming](#admin-soon)
+
+#### Classification
+- [Introduction](#intro)
+- [Introductory examples](#examples)
+- [Why not linear regression](#no-regress)
+- [Linear probability models](#lpm)
+
+#### Logistic regression
+- [Intro](#logistic-intro)
+- [The logistic function](#logistic-logistic)
+- [Estimation](#logistic-estimation)
+- [Maximum likelihood](#logistic-mle)
+- [In R](#logistic-r)
+- [Prediction](#logistic-prediction)
+
+]
+]
+.col-right[
+.smallest[
+
+#### Assessment
+- [How did we do?](#how)
+- [The confusion matrix](#confusion)
+- [In R](#cm-r)
+- [Thresholds](#thresholds)
+- [ROC curves and AUC](#roc)
+
+#### Other
+- [Extras](#extras)
+- [Sources/references](#sources)
+]
+]
+
+---
+exclude: true
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
