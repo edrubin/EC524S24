@@ -202,7 +202,7 @@ Due: 20 April 2024 (submit on Canvas)
 
 **001** [Validation and out-of-sample performance](https://github.com/edrubin/EC524S24/tree/master/projects/project-001)
 
-Due: TBA
+Due: 03 May 2024 (submit on Canvas)
 
 **002** [Penalized regression, logistic regression, and classification](https://github.com/edrubin/EC524W23/tree/master/projects/project-002)
 
