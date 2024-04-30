@@ -200,7 +200,7 @@ Due: 20 April 2024 (submit on Canvas)
 - [A simple example/walkthrough](https://www.kaggle.com/edwardarubin/project-000-example)
 - [Kaggle notebooks](https://rpubs.com/Clennon/KagNotes) (from Connor Lennon)
 
-**001** [Validation and out-of-sample performance](https://github.com/edrubin/EC524W23/tree/master/projects/project-001)
+**001** [Validation and out-of-sample performance](https://github.com/edrubin/EC524S24/tree/master/projects/project-001)
 
 Due: TBA
 
