@@ -852,6 +852,23 @@ set_text_color(4,4,orange)
 ```
 
 ---
+## The confusion matrix
+
+.attn[Negative prediction value:]<br>the share of predicted negatives $(\hat{Y}=0)$ that are correct.
+
+.center[
+.b[NPV] = .hi-orange[TN] / (.hi-orange[TN] + .hi-purple[FN])
+]
+
+```{r, cm-npv, echo = F, eval = T}
+conf_mat %>%
+set_text_color(3,2:4,purple) %>%
+set_text_color(3,3,orange)
+```
+
+.note[Note:] NPV is not commonly used.
+
+---
 ## Which assessment?
 
 .qa[Q] So .it[which] criterion should we use?
