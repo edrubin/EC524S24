@@ -140,13 +140,13 @@ Welcome to Economics 524 (424): Prediction and machine-learning in econometrics,
 
 - *ISL* Ch4
 
-[**007 - Decision trees**](https://raw.githack.com/edrubin/EC524W23/master/lecture/007/slides.html)
+[**007 - Decision trees**](https://raw.githack.com/edrubin/EC524S24/master/lecture/007/slides.html)
 
 1. Introduction to trees
 1. Regression trees
 1. Classification trees—including the Gini index, entropy, and error rate
 
-**Formats** [.html](https://raw.githack.com/edrubin/EC524W23/master/lecture/007/slides.html) | [.pdf](https://github.com/edrubin/EC524W23/blob/master/lecture/007/slides.pdf) | [.rmd](https://github.com/edrubin/EC524W23/blob/master/lecture/007/slides.rmd)
+**Formats** [.html](https://raw.githack.com/edrubin/EC524S24/master/lecture/007/slides.html) | [.pdf](https://github.com/edrubin/EC524S24/blob/master/lecture/007/slides.pdf) | [.rmd](https://github.com/edrubin/EC524S24/blob/master/lecture/007/slides.rmd)
 
 **Readings**
 
