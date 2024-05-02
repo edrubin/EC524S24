@@ -43,6 +43,7 @@ By midnight on **June 3rd**, submit **two documents** on Canvas (share links or 
 | Non-IID sampling (clustering) | Katee Early |
 | Pattern tracking in satellite imagery | Ethan Drake |
 | Clustering algorithms in unsupervised learning | Erik Johnson |
+| Het. trt. effect estimation | Mohamed Almajed |
 
 ## Some ideas for topics
 
