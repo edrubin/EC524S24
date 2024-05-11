@@ -204,7 +204,7 @@ Due: 20 April 2024 (submit on Canvas)
 
 Due: 03 May 2024 (submit on Canvas)
 
-[Solution guide](projects/project-001/key-001.html)
+[Solution guide](https://github.com/edrubin/EC524S24/tree/master/projects/project-002)
 
 **002** [Penalized regression, logistic regression, and classification](https://github.com/edrubin/EC524S24/tree/master/projects/project-002)
 
