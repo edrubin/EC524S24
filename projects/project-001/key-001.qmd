@@ -1,0 +1,267 @@
+---
+title: "Guide to project 001"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    number-sections: false
+    self-contained: true
+---
+
+## Setting up
+
+Load the packages
+
+```{r, load-pkgs}
+library(pacman)
+p_load(tidyverse, caret, tidymodels, magrittr, janitor, here)
+```
+
+Load the data.
+
+```{r, load-data}
+# Load data
+train_df =
+  here('projects', 'project-001', 'data', 'train.csv') |>
+  read_csv()
+test_df =
+  here('projects', 'project-001', 'data', 'test.csv') |>
+  read_csv()
+```
+
+I'm going to clean the names and then redefine sale price as its log (since the competition focuses on the logged price).
+
+```{r, clean-data}
+# Clean up names
+train_df %<>% clean_names()
+test_df %<>% clean_names()
+# Replace sale_price with its log
+train_df %<>% mutate(sale_price = log(sale_price))
+# Add empty sale_price to test_df
+test_df$sale_price = NA
+```
+
+## 04–05: Linear regression
+
+Start with one simple model...
+
+```{r, p04a}
+# Define a linear regression model
+model_reg =
+  linear_reg() |>
+  set_mode('regression') |>
+  set_engine('lm')
+# Define a simple recipe
+recipe01 =
+  recipe(sale_price ~ lot_area + gr_liv_area, data = train_df) |>
+  # Simple imputations
+  step_impute_mean(all_numeric_predictors()) |>
+  step_impute_mode(all_nominal_predictors()) |>
+  # Dummies
+  step_dummy(all_nominal_predictors()) |>
+  # Drop near-zero-variance variables and linear combinations
+  step_nzv(all_numeric_predictors()) |>
+  step_lincomb(all_numeric_predictors())
+# Define the workflow
+wf_reg01 =
+  workflow() |>
+  add_model(model_reg) |>
+  add_recipe(recipe01)
+```
+
+Add a few more variables...
+
+```{r, p04b}
+# Update the recipe to add a few variables
+recipe02 =
+  recipe(sale_price ~ lot_area + gr_liv_area + year_built + ms_zoning, data = train_df) |>
+  # Simple imputations
+  step_impute_mean(all_numeric_predictors()) |>
+  step_impute_mode(all_nominal_predictors()) |>
+  # Dummies
+  step_dummy(all_nominal_predictors()) |>
+  # Drop near-zero-variance variables and linear combinations
+  step_nzv(all_numeric_predictors()) |>
+  step_lincomb(all_numeric_predictors())
+# Define the workflow
+wf_reg02 =
+  workflow() |>
+  add_model(model_reg) |>
+  add_recipe(recipe02)
+```
+
+Set up the cross validation splits and then fit.
+
+```{r, p04c}
+# Set seed (for repeatability)
+set.seed(12345)
+# 5-fold CV on the training dataset
+credit_cv = train_df %>% vfold_cv(v = 5)
+# Fit!
+fit_reg01 =
+  wf_reg01 |>
+  fit_resamples(resamples = credit_cv, metrics = metric_set(rmse))
+fit_reg02 =
+  wf_reg02 |>
+  fit_resamples(resamples = credit_cv, metrics = metric_set(rmse))
+```
+
+Finally, we can compare the two models' performances.
+
+```{r, p04d}
+# Summarize CV results
+fit_reg01 |> collect_metrics(summarize = TRUE)
+fit_reg02 |> collect_metrics(summarize = TRUE)
+```
+
+## 06: Stepwise selection
+
+For this step, I'll clean the individual datasets with a recipe.
+
+We **should** add this recipe to a workflow that is part of our cross validation (as I did above and will do in other problems). I'm cutting a corner here to keep things simple with `caret`.
+
+I'll also `prep()` the recipe.
+
+```{r, p06a}
+a_recipe =
+  recipe(sale_price ~ ., data = train_df) |>
+  # Define the role of 'id'
+  update_role(id, new_role = 'ID') |>
+  # Simple imputations
+  step_impute_mean(all_numeric_predictors()) |>
+  step_impute_mode(all_nominal_predictors()) |>
+  # Dummies
+  step_dummy(all_nominal_predictors()) |>
+  # Drop near-zero-variance variables and linear combinations
+  step_nzv(all_numeric_predictors()) |>
+  step_lincomb(all_numeric_predictors())
+# Prep it
+prepped_recipe = a_recipe |> prep()
+```
+
+```{r, p06b}
+# Clean the training data
+train_clean = prepped_recipe |> bake(new_data = NULL)
+# Clean the testing data
+test_clean = prepped_recipe |> bake(new_data = test_df)
+```
+
+Check it out: Names match!
+
+```{r, p06c}
+setdiff(names(train_clean), names(test_clean))
+```
+
+Time for the stepwise (forward) model selection...
+
+There are a few options here. We can use the `y` and `x` approach, or we can input the `form` (formula) and `data`.
+
+Passing `y` and `x`:
+
+```{r, p06d}
+#| warning: false
+# Set a seed
+set.seed(42)
+# Train!
+train_fwd_1 = caret::train(
+  y = train_clean$sale_price,
+  x = train_clean |> select(-sale_price, -id),
+  trControl = trainControl(method = 'cv', number = 5),
+  method = "leapForward",
+  tuneGrid = data.frame(nvmax = 1:(ncol(train_clean) - 2))
+)
+```
+
+**Passing `form` and `data`:**
+
+```{r, p06e}
+# Set a seed
+set.seed(42)
+# Train!
+train_fwd_2 = caret::train(
+  form = sale_price ~ .,
+  data = train_clean |> select(-id),
+  trControl = trainControl(method = 'cv', number = 5),
+  method = "leapForward",
+  tuneGrid = data.frame(nvmax = 1:(ncol(train_clean) - 2))
+)
+```
+
+There are a few ways to view things about the final model chosen by `caret::train()`.
+
+- You can pass the final object (*e.g.*, `train_fwd_1`) to the `summary()` function, which will produce a lot of somewhat helpful output.
+- You can can also grab the `finalModel` from your `train`ed object and then pass it to other functions like `coef()` to see the coefficients. You will also need to pass `coef()` a number referencing *which* stepwise model you want to examine. The index of the "best" model is stored in `$bestTune` (as a `data.frame`, so we need to `unlist()` it).
+
+**Example of option 2:**
+
+```{r, p06f}
+# First show the results of training/tuning the model
+train_fwd_1
+# We can show the first model (intercept and one feature)
+train_fwd_1$finalModel |> coef(1)
+# Now show the coefficients of the "best" model
+train_fwd_1$finalModel |> coef(train_fwd_1$bestTune |> unlist())
+```
+
+*Note:* The `str()` function can be really helpful in examining the structure of any object—as can the `class()` function to get as sense of which class you're working with.
+
+## 07: Lasso
+
+We can start with the existing recipe, but we also want to standardize the variables. I'm also expanding the numeric features with a second-degree polynomial.
+
+Also, we need to deal with some binary variables that end up with only one value in the splits.
+
+```{r, p07a}
+# Update the existing recipe with normalization
+recipe_lasso =
+  recipe(sale_price ~ ., data = train_df) |>
+  # Define the role of 'id'
+  update_role(id, new_role = 'ID') |>
+  # Try to take care of categorical issues
+  step_string2factor(all_string_predictors()) |>
+  # Simple imputations
+  step_impute_mean(all_numeric_predictors()) |>
+  step_impute_mode(all_nominal_predictors()) |>
+  # Add quadratic terms
+  step_poly(all_numeric_predictors(), degree = 2) |>
+  # Dummies
+  step_zv(all_nominal_predictors()) |>
+  step_dummy(all_nominal_predictors()) |>
+  # Normalize variables
+  step_normalize(all_numeric_predictors()) |>
+  # Drop near-zero-variance variables and linear combinations
+  step_corr(all_numeric_predictors(), threshold = 0.9) |>
+  step_nzv(all_numeric_predictors()) |>
+  step_lincomb(all_numeric_predictors()) |>
+  step_zv(all_numeric_predictors())
+```
+
+Now we just need a lasso model and workflow...
+
+```{r, p07b}
+# The model (make sure to set penalty to tune and mixture=1)
+model_lasso =
+  linear_reg(penalty = tune(), mixture = 1) |>
+  set_mode('regression') |>
+  set_engine('glmnet')
+# Workflow
+wf_lasso =
+  workflow() |>
+  add_model(model_lasso) |>
+  add_recipe(recipe_lasso)
+```
+
+... and we can cross validate the penalty!
+
+```{r, p07c}
+# Fit!
+fit_lasso =
+  wf_lasso |>
+  tune_grid(
+    resamples = credit_cv,
+    metrics = metric_set(rmse),
+    grid = grid_regular(penalty(), levels = 50)
+  )
+# How did we do?
+fit_lasso |> show_best(metric = 'rmse', n = 10)
+```

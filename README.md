@@ -152,14 +152,14 @@ Welcome to Economics 524 (424): Prediction and machine-learning in econometrics,
 
 - *ISL* Ch8.1–Ch8.2
 
-[**008 - Ensemble methods**](https://raw.githack.com/edrubin/EC524W23/master/lecture/008/008-slides.html)
+[**008 - Ensemble methods**](https://raw.githack.com/edrubin/EC524S24/master/lecture/008/slides.html)
 
 1. Introduction
 1. Bagging
 1. Random forests
 1. Boosting
 
-**Formats** [.html](https://raw.githack.com/edrubin/EC524W23/master/lecture/008/008-slides.html) | [.pdf](https://github.com/edrubin/EC524W23/blob/master/lecture/008/008-slides.pdf) | [.Rmd](https://github.com/edrubin/EC524W23/blob/master/lecture/008/008-slides.Rmd)
+**Formats** [.html](https://raw.githack.com/edrubin/EC524S24/master/lecture/008/slides.html) | [.pdf](https://github.com/edrubin/EC524S24/blob/master/lecture/008/slides.pdf) | [.rmd](https://github.com/edrubin/EC524S24/blob/master/lecture/008/slides.rmd)
 
 **Readings**
 
@@ -204,9 +204,11 @@ Due: 20 April 2024 (submit on Canvas)
 
 Due: 03 May 2024 (submit on Canvas)
 
-**002** [Penalized regression, logistic regression, and classification](https://github.com/edrubin/EC524W23/tree/master/projects/project-002)
+[Solution guide](projects/project-001/key-001.html)
 
-Due: TBA
+**002** [Penalized regression, logistic regression, and classification](https://github.com/edrubin/EC524S24/tree/master/projects/project-002)
+
+Due: 18 May 2024 (submit on Canvas)
 
 **003** [Nonlinear predictors](https://github.com/edrubin/EC524W23/tree/master/projects/project-003)
 

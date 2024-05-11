@@ -707,7 +707,7 @@ This split yields an RSS of .purple[(-4).super[2]] + .purple[4.super[2]] + .pink
 
 ---
 
-Another split: x.sub[2] at 3, which yields .purple[(.b[1]) x.sub[1] < 3] .it[vs.] .pink[(.b[2]) x.sub[1] ≥ 3]
+Another split: x.sub[2] at 3, which yields .purple[(.b[1]) x.sub[2] < 3] .it[vs.] .pink[(.b[2]) x.sub[2] ≥ 3]
 
 ```{r, ex-split3, echo = F}
 ex_df %>% mutate("pred." = c(3, 8, 3)) %>%
@@ -725,7 +725,7 @@ This split yields an RSS of .pink[(-3).super[2]] + .purple[0.super[2]] + .pink[3
 
 ---
 
-Final split: x.sub[2] at 5, which yields .purple[(.b[1]) x.sub[1] < 5] .it[vs.] .pink[(.b[2]) x.sub[1] ≥ 5]
+Final split: x.sub[2] at 5, which yields .purple[(.b[1]) x.sub[2] < 5] .it[vs.] .pink[(.b[2]) x.sub[2] ≥ 5]
 
 ```{r, ex-split4, echo = F}
 ex_df %>% mutate("pred." = c(4, 4, 6)) %>%
