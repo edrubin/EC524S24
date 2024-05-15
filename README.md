@@ -172,7 +172,7 @@ Welcome to Economics 524 (424): Prediction and machine-learning in econometrics,
 3. The support vector classifier
 4. Support vector machines
 
-**Formats** [.html](https://raw.githack.com/edrubin/EC524S24/master/lecture/009/slides.html) | [.pdf](https://github.com/edrubin/EC524S24/blob/master/lecture/009/slides.pdf) | [.rmd](https://github.com/edrubin/EC524S24/blob/master/lecture/009/009-slides.rmd)
+**Formats** [.html](https://raw.githack.com/edrubin/EC524S24/master/lecture/009/slides.html) | [.pdf](https://github.com/edrubin/EC524S24/blob/master/lecture/009/slides.pdf) | [.rmd](https://github.com/edrubin/EC524S24/blob/master/lecture/009/slides.rmd)
 
 **Readings**
 
