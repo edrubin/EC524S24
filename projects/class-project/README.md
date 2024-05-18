@@ -24,26 +24,33 @@ By midnight on **June 3rd**, submit **two documents** on Canvas (share links or 
 
 ## Claimed topics
 
+**Day 1 Presentations** Wednesday, 05 June 2024, 12p–1:20p
+
 | Topic | Name |
 |:---------|:---------|
-| Time-series forecasting with Prophet | Ryan Denton |
-| Stochastic gradient boosting | Anthony Xu |
-| eXtreme Gradient Boosting | Becky Driver |
-| Transformer-Based Language Models | Amit Das |
-| Bayesian machine learning methods | Christie Downs |
-| Adversarial machine learning | Elyse St Sauver |
-| Image/facial recognition | Gabe Liebman |
-| Neural networks | Sean M |
-| Deep neural nets | Julia Dragu |
-| Reinforcement learning | Reece Blagdon |
-| Transfer learning | Nick K |
-| NLP | Ian Finn |
 | Discriminant analysis | Elena Breedlove |
+| eXtreme Gradient Boosting | Becky Driver |
+| Stochastic gradient boosting | Anthony Xu |
 | Maximum likelihood estimation | Will Grossman |
+| Bayesian machine learning methods | Christie Downs |
 | Non-IID sampling (clustering) | Katee Early |
-| Pattern tracking in satellite imagery | Ethan Drake |
+| Time-series forecasting with Prophet | Ryan Denton |
 | Clustering algorithms in unsupervised learning | Erik Johnson |
 | Het. trt. effect estimation | Mohamed Almajed |
+
+**Day 2 Presentations** Friday, 07 June 2024, 12p–12:50p
+
+| Topic | Name |
+|:---------|:---------|
+| Neural networks | Sean M |
+| Deep neural nets | Julia Dragu |
+| Transformer-Based Language Models | Amit Das |
+| Image/facial recognition | Gabe Liebman |
+| Pattern tracking in satellite imagery | Ethan Drake |
+| NLP | Ian Finn |
+| Reinforcement learning | Reece Blagdon |
+| Adversarial machine learning | Elyse St Sauver |
+| Transfer learning | Nick K |
 
 ## Some ideas for topics
 
