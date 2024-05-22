@@ -212,6 +212,8 @@ Due: 18 May 2024 (submit on Canvas)
 
 **003** [Trees, ensembles, and imputation](projects/project-003)
 
+Due: 28 May 2024 (submit on Canvas)
+
 ## Class project
 
 [Outline of the project](https://github.com/edrubin/EC524S24/tree/master/projects/class-project)
