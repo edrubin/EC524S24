@@ -210,13 +210,7 @@ Due: 03 May 2024 (submit on Canvas)
 
 Due: 18 May 2024 (submit on Canvas)
 
-**003** [Nonlinear predictors](https://github.com/edrubin/EC524W23/tree/master/projects/project-003)
-
-Due: TBA
-
-**004** [Image/multi-class classification (MNIST)](https://github.com/edrubin/EC524W22/tree/master/projects/project-004)
-
-Due: TBA
+**003** [Trees, ensembles, and imputation](projects/project-003)
 
 ## Class project
 

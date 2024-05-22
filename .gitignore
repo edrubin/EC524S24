@@ -6,7 +6,8 @@ lecture/01*
 # Temporary holds: Projects
 projects/project-001-old
 projects/project-002/test-code.R
-projects/project-00[3-9]*
+projects/project-003-old
+projects/project-00[4-9]*
 
 # Exams
 exam/in-class/*
