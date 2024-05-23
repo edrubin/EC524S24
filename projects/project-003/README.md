@@ -28,7 +28,7 @@ Now we'll grow a (short) tree. By hand. In this section, we're going to focus on
 
 1.1\ For the moment, let's focus on the possible splits of the `island` variable. There are three islands. How many possible splits are there? 
 
-1.2\ Try each split of `island` and then calculate the split's accuracy, entropy, and gini.
+1.2\ Try each split of `island` and then calculate the split's accuracy and gini.
 
 1.3\ Repeat 1.2 but for the `sex` variable.
 

@@ -36,21 +36,21 @@ By midnight on **June 3rd**, submit **two documents** on Canvas (share links or 
 | Non-IID sampling (clustering) | Katee Early |
 | Time-series forecasting with Prophet | Ryan Denton |
 | Clustering algorithms in unsupervised learning | Erik Johnson |
+| Pattern tracking in satellite imagery | Ethan Drake |
 | Het. trt. effect estimation | Mohamed Almajed |
 
 **Day 2 Presentations** Friday, 07 June 2024, 12p–12:50p
 
 | Topic | Name |
 |:---------|:---------|
-| Neural networks | Sean M |
+| Neural networks | Sean Milligan |
 | Deep neural nets | Julia Dragu |
 | Transformer-Based Language Models | Amit Das |
 | Image/facial recognition | Gabe Liebman |
-| Pattern tracking in satellite imagery | Ethan Drake |
 | NLP | Ian Finn |
 | Reinforcement learning | Reece Blagdon |
 | Adversarial machine learning | Elyse St Sauver |
-| Transfer learning | Nick K |
+| Transfer learning | Nik Kovacevic |
 
 ## Some ideas for topics
 
