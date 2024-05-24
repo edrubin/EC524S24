@@ -36,6 +36,7 @@ By midnight on **June 3rd**, submit **two documents** on Canvas (share links or 
 | Non-IID sampling (clustering) | Katee Early |
 | Time-series forecasting with Prophet | Ryan Denton |
 | Clustering algorithms in unsupervised learning | Erik Johnson |
+| Self-supervised learning | Max Moore |
 | Pattern tracking in satellite imagery | Ethan Drake |
 | Het. trt. effect estimation | Mohamed Almajed |
 
