@@ -226,6 +226,14 @@ Due: 28 May 2024 (submit on Canvas)
 
 ## Final exam
 
+**Prep materials**
+<br>
+[Previous take-home exam](exam/past-home/README.md)
+<br>
+[Previous in-class exam](exam/past-class/exam-inclass.pdf)
+<br>
+*Note:* I am not providing keys.
+
 **Take-home portion**
 <br>
 *Submit on Canvas by 10:15a Pacific on Friday, 14 June 2024*
