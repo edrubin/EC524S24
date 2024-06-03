@@ -24,34 +24,34 @@ By midnight on **June 3rd**, submit **two documents** on Canvas (share links or 
 
 ## Claimed topics
 
-**Day 1 Presentations** Wednesday, 05 June 2024, 12p–1:20p
-
-| Topic | Name |
-|:---------|:---------|
-| Discriminant analysis | Elena Breedlove |
-| eXtreme Gradient Boosting | Becky Driver |
-| Stochastic gradient boosting | Anthony Xu |
-| Maximum likelihood estimation | Will Grossman |
-| Bayesian machine learning methods | Christie Downs |
-| Non-IID sampling (clustering) | Katee Early |
-| Time-series forecasting with Prophet | Ryan Denton |
-| Clustering algorithms in unsupervised learning | Erik Johnson |
-| Self-supervised learning | Max Moore |
-| Pattern tracking in satellite imagery | Ethan Drake |
-| Het. trt. effect estimation | Mohamed Almajed |
-
-**Day 2 Presentations** Friday, 07 June 2024, 12p–12:50p
+**Day 1 Presentations** Monday, 03 June 2024, 12p–1:20p
 
 | Topic | Name |
 |:---------|:---------|
 | Neural networks | Sean Milligan |
 | Deep neural nets | Julia Dragu |
+| Adversarial machine learning | Elyse St Sauver |
+| Discriminant analysis | Elena Breedlove |
+| Bayesian machine learning methods | Christie Downs |
+| Non-IID sampling (clustering) | Katee Early |
+| Time-series forecasting with Prophet | Ryan Denton |
+| Clustering algorithms in unsupervised learning | Erik Johnson |
+| Pattern tracking in satellite imagery | Ethan Drake |
+
+**Day 2 Presentations** Wednesday, 05 June 2024, 12p–1:20p
+
+| Topic | Name |
+|:---------|:---------|
+| Self-supervised learning | Max Moore |
+| Het. trt. effect estimation | Mohamed Almajed |
+| Transfer learning | Nik Kovacevic |
+| Maximum likelihood estimation | Will Grossman |
+| eXtreme Gradient Boosting | Becky Driver |
+| Stochastic gradient boosting | Anthony Xu |
+| NLP | Ian Finn |
 | Transformer-Based Language Models | Amit Das |
 | Image/facial recognition | Gabe Liebman |
-| NLP | Ian Finn |
 | Reinforcement learning | Reece Blagdon |
-| Adversarial machine learning | Elyse St Sauver |
-| Transfer learning | Nik Kovacevic |
 
 ## Some ideas for topics
 
