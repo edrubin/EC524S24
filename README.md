@@ -234,7 +234,7 @@ Due: 28 May 2024 (submit on Canvas)
 <br>
 *Note:* I am not providing keys.
 
-**Take-home portion**
+[**Take-home portion**](exam/exam-home/README.md)
 <br>
 *Submit on Canvas by 10:15a Pacific on Friday, 14 June 2024*
 <br>
