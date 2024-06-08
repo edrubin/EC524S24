@@ -6,7 +6,7 @@ With your fancy new ML tools, we are going to return to the problem of predictin
 
 ## Help!
 
-In addition to the lab materials, lecture notes, and books, don't forget that we also have a bunhc of Kaggle notebooks that could help:
+In addition to the lab materials, lecture notes, and books, don't forget that we also have a bunch of Kaggle notebooks that could help:
 
 - [An introduction to preprocessing with `tidymodels`](https://www.kaggle.com/edwardarubin/intro-tidymodels-preprocessing). (Kaggle notebook)
 - [An introduction to modeling with `tidymodels`](https://www.kaggle.com/edwardarubin/intro-tidymodels-modeling). (Kaggle notebook)
