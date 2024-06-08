@@ -214,7 +214,7 @@ Due: 18 May 2024 (submit on Canvas)
 
 [Help from class](projects/project-003/help-003.md)
 
-[Key](projects/project-003/key-003.html)
+[Key](https://raw.githack.com/edrubin/EC524S24/master/projects/project-003/key-003.html)
 
 Due: 28 May 2024 (submit on Canvas)
 
