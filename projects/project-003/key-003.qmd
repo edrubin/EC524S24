@@ -1,0 +1,355 @@
+---
+title: "Trees, ensembles, and imputation"
+subtitle: "EC 524/424, Problem Set 03 Key"
+# author: "Edward Rubin"
+editor:
+  render-on-save: true
+format:
+  html:
+    toc: false
+    number-sections: false
+    embed-resources: true
+    self-contained: true
+    theme:
+    - cosmo
+    - ed.scss
+---
+
+
+## Part 0: Data cleaning
+
+**0.1** Use `skimr` to check out the data. We're predicting penguin species in the [`palmerpenguins`](https://allisonhorst.github.io/palmerpenguins/) dataset. How many species do we have? Are they fairly balanced in the data? Why does it matter?
+
+```{r, 01-setup}
+# Load packages
+library(pacman)
+p_load(palmerpenguins, data.table, collapse, tidymodels, ggplot2)
+# Load the penguin data
+data('penguins')
+# Counts of penguin species
+penguins$species |> qtab()
+```
+
+:::{style="display: inherit;"}
+[Answer]{.ans} There are three penguin species in the dataset, and they are not very equally distributed. The imbalance of our outcome matters because models can achieve high levels of accuracy by only learning one class when the classes are vey imbalanced.
+:::
+
+**0.2** What is imputation?
+
+:::{style="display: inherit;"}
+[Answer]{.ans} Imputation basically means filling in missing values.
+:::
+
+
+**0.3** Hopefully you noticed we have some missing data. Let's impute. By hand. Since we're doing it by hand, let's start simply. For categorical variables, you can use the modal class. For numeric, let's use the median.
+
+[Answer]{.ans}
+
+```{r, 03-answer}
+# Make a copy of the dataset for these imputed values
+penguins_copy = penguins
+# Find the mode of 'sex'
+mode_index = penguins_copy$sex |> table() |> which.max()
+mode_sex = mode_index |> names()
+# Find the penguins with NA for 'sex'
+na_sex = penguins_copy$sex |> is.na() |> which()
+penguins_copy$sex[na_sex] = mode_sex
+```
+
+*Note:* It would have been easier to just use `fmode()` from the `collapse` package. But now you have options.
+
+**0.4** Now let's repeat using `tidymodels`. Make a `recipe` and then `prep` and `bake` it. Check out the objects!
+
+[Answer]{.ans}
+
+```{r, 04-answer}
+# Reload data
+data(penguins)
+# Define recipe
+basic_recipe =
+  recipe(species ~ ., data = penguins) |>
+  step_impute_mode(all_nominal_predictors()) |>
+  step_impute_median(all_numeric_predictors())
+# Prep and bake
+basic_prep = basic_recipe |> prep()
+basic_bake = basic_prep |> bake(new_data = NULL)
+```
+
+**0.5** How could we be more sophisticated/clever about imputation? Why would it matter?
+
+:::{style="display: inherit;"}
+[Answer]{.ans} Our median/mode-based imputation ignores all of the information that we have on penguins that have missing values. Just as we want to use covariates to predict the outcome, we probably could do a better job predicting the missing values by using the non-missing covariates.
+:::
+
+## Part 1: A short tree
+
+Now we'll grow a (short) tree. By hand. In this section, we're going to focus on the mechanics of growing a tree. We will ignore CV for now.
+
+**1.1** For the moment, let's focus on the possible splits of the `island` variable. There are three islands. How many possible splits are there? 
+
+:::{style="display: inherit;"}
+[Answer]{.ans} There are three possible splits (for three islands):
+
+- {Biscoe} *v.* {Dream, Torgersen}
+- {Dream} *v.* {Biscoe, Torgersen}
+- {Torgersen} *v.* {Biscoe, Dream}
+:::
+
+**1.2** Try each split of `island` and then calculate the split's accuracy and gini.
+
+[Answer]{.ans}
+```{r, 12-answer}
+# Find the islands
+islands = basic_bake$island |> unique()
+# Iterating over islands
+lapply(X = islands, FUN = function(i) {
+  # Split into Biscoe and not Biscoe
+  grp1 = basic_bake |> filter(island == i)
+  grp2 = basic_bake |> filter(island != i)
+  # Find the modal species in each group
+  species1 = grp1$species |> fmode()
+  species2 = grp2$species |> fmode()
+  # Calculate accuracy
+  acc1 = fmean(grp1$species == species1)
+  acc2 = fmean(grp2$species == species2)
+  # Weighted accuracy
+  acc = (acc1 * nrow(grp1) + acc2 * nrow(grp2)) / (nrow(grp1) + nrow(grp2))
+  # Calculate gini
+  g1 = grp1$species |> table() |> prop.table()
+  g2 = grp2$species |> table() |> prop.table()
+  gini1 = sum(g1 * (1 - g1))
+  gini2 = sum(g2 * (1 - g2))
+  # Weighted gini (using different approach)
+  gini = fmean(c(gini1, gini2), w = c(nrow(grp1), nrow(grp2)))
+  # Return a data table
+  data.table(
+    split = paste0(
+      i, ' v. ',
+      '{', paste(setdiff(islands, i), collapse = ', '), '}'
+    ),
+    accuracy = acc,
+    gini = gini
+  )
+}) |> rbindlist()
+```
+
+**1.3** Repeat 1.2 but for the `sex` variable.
+
+[Answer]{.ans}
+```{r, 13-answer}
+# Find the islands
+sexes = basic_bake$sex |> unique()
+# NOTE There is only one possible split
+# Iterating over islands
+lapply(X = sexes[1], FUN = function(i) {
+  # Split into Biscoe and not Biscoe
+  grp1 = basic_bake |> filter(sex == i)
+  grp2 = basic_bake |> filter(sex != i)
+  # Find the modal species in each group
+  species1 = grp1$species |> fmode()
+  species2 = grp2$species |> fmode()
+  # Calculate accuracy
+  acc1 = fmean(grp1$species == species1)
+  acc2 = fmean(grp2$species == species2)
+  # Weighted accuracy
+  acc = (acc1 * nrow(grp1) + acc2 * nrow(grp2)) / (nrow(grp1) + nrow(grp2))
+  # Calculate gini
+  g1 = grp1$species |> table() |> prop.table()
+  g2 = grp2$species |> table() |> prop.table()
+  gini1 = sum(g1 * (1 - g1))
+  gini2 = sum(g2 * (1 - g2))
+  # Weighted gini (using different approach)
+  gini = fmean(c(gini1, gini2), w = c(nrow(grp1), nrow(grp2)))
+  # Return a data table
+  data.table(
+    split = paste0(
+      i, ' v. ', setdiff(sexes, i)
+    ),
+    accuracy = acc,
+    gini = gini
+  )
+}) |> rbindlist()
+```
+
+**1.4** Which variable and split would you make? Why?
+
+:::{style="display: inherit;"}
+[Answer]{.ans} I would choose the Biscoe vs. {Torgersen, Dream} island-based split due to its low gini.
+:::
+
+**1.5** We would typically want to consider all possible splits for the numeric variables as well. Explain (or code) an approach that would try all of the splits for `bill_length_mm`.
+
+:::{style="display: inherit;"}
+[Answer]{.ans} I would use the following steps:
+
+- Find all of the unique numeric values.
+- Sort these values smallest to largest.
+- Calculate the midpoint between each pair of consecutive values.
+
+We can use these midpoints for the splits.
+:::
+
+## Part 2: A bigger tree
+
+Now that you know how to grow a tree, we can just let `tidymodels` do it for you. However, we now want to (1) add cross validation and (2) bring our imputation step into the workflow that we're validating. Stick with mode and median imputation.
+
+**2.1** Use `tidymodels` to [grow a tree](https://parsnip.tidymodels.org/reference/decision_tree.html) (actually multiple trees). Remember: We can (need to) *tune* the cost complexity (`cost_complexity`) to try to restrict the tree from overfitting.
+
+:::{style="display: inherit;"}
+[Answer]{.ans} We already have a basic recipe (`basic_recipe`), so now we need a model, a workflow, and then we will be ready to tune.
+
+Start with the model...
+```{r, 21-answer}
+# Define the model
+basic_tree = decision_tree(
+  mode = 'classification',
+  engine = 'rpart',
+  cost_complexity = tune(),
+  tree_depth = 30,
+  min_n = 3
+)
+```
+
+Now the workflow...
+```{r, 21b-answer}
+# Define the splits
+set.seed(123)
+split = penguins |> vfold_cv(v = 5)
+# Define the model
+wf_tree =
+  workflow() |>
+  add_model(basic_tree) |>
+  add_recipe(basic_recipe)
+```
+
+And tune!
+```{r, 21c-answer}
+#| cache: true
+tune_tree =
+  tune_grid(
+    wf_tree,
+    split,
+    grid = grid_regular(cost_complexity(), levels = 100),
+    metrics = metric_set(roc_auc, accuracy)
+  )
+```
+:::
+
+**2.2** How did it go? Did the best tree need pruning?
+
+:::{style="display: inherit;"}
+[Answer]{.ans} Let's see!
+```{r, 22-answer}
+tune_tree |> show_best(metric = 'accuracy', n = 10)
+```
+
+Maybe it's more helpful to plot it...
+```{r, 22b-answer}
+tune_tree |>
+  collect_metrics() |>
+  fsubset(.metric == 'accuracy') |>
+  ggplot(aes(x = cost_complexity, y = mean)) +
+  geom_line() +
+  geom_point() +
+  scale_y_continuous('Accuracy') +
+  scale_x_continuous('Cost Complexity', transform = 'log') +
+  theme_minimal()
+```
+:::
+
+It doesn't actually look like we want to enforce too much cost complexity.
+
+## Part 3: More trees and more randomness
+
+The first "more trees" option that we saw in class was bagging---bootstrap aggregation---where we boostrap our training data and then train a big tree on each of the bootstrapped datasets. Random forests repeat this idea, but they also only let the tree see a random subset of variables at each split.
+
+**3.1** Briefly explain how you could build upon your work in Part 1 to grow a random forest.
+
+:::{style="display: inherit;"}
+[Answer]{.ans} We would need to do two things:
+
+1. Create a bunch of bootstrapped samples.
+2. Change our algorithm to only consider a random subset of features for each split.
+:::
+
+**3.2** Now use `tidymodels` to tune (with CV) a [random forest](https://parsnip.tidymodels.org/reference/rand_forest.html). Make sure you tune the relevant parameters (what are they?).
+
+:::{style="display: inherit;"}
+[Answer]{.ans} The most relevant hyperparameter is the number of variables considered in a given split (`mtry`). We probably also want to tune the minimum leaf size (`min_n`).
+
+Let's define the model...
+```{r, 32-answer}
+# Define a model
+model_forest = rand_forest(
+  mode = 'classification',
+  mtry = tune(),
+  trees = 50,
+  min_n = tune()
+) |>
+  set_engine(engine = 'ranger', splitrule = 'gini')
+```
+and now the workflow...
+```{r, 32b-answer}
+wf_forest =
+  workflow() |>
+  add_model(model_forest) |>
+  add_recipe(basic_recipe)
+```
+and now we can tune!
+```{r, 32c-answer}
+tune_forest =
+  tune_grid(
+    wf_forest,
+    split,
+    grid = grid_regular(mtry(range = c(1, 6)), min_n(), levels = c(6, 4)),
+    metrics = metric_set(roc_auc, accuracy)
+  )
+```
+Let's see how we did...
+```{r, 32d-answer}
+tune_forest |> show_best(metric = 'accuracy', n = 10)
+```
+:::
+
+**3.3** Now update your workflow to use "fancier" [approaches](https://recipes.tidymodels.org/reference/) for imputation. Rerun your CV.
+
+:::{style="display: inherit;"}
+[Answer]{.ans} I'm going to try KNN-based imputation.
+```{r, 33-answer}
+# Define recipe
+knn_recipe =
+  recipe(species ~ ., data = penguins) |>
+  step_impute_knn(all_predictors())
+```
+Now push this new imputation into a workflow and repeat our previous steps...
+```{r, 33b-answer}
+# New workflow
+wf_forest_knn =
+  workflow() |>
+  add_model(model_forest) |>
+  add_recipe(knn_recipe)
+# Tune again
+tune_forest_knn =
+  tune_grid(
+    wf_forest,
+    split,
+    grid = grid_regular(mtry(range = c(1, 6)), min_n(), levels = c(6, 4)),
+    metrics = metric_set(roc_auc, accuracy)
+  )
+```
+:::
+
+**3.4** How does this fancier imputation affect your performance? 
+
+:::{style="display: inherit;"}
+[Answer]{.ans} It doesn't look like it was super important to be fancy with imputation in this setting.
+```{r, 34-answer}
+tune_forest_knn |> show_best(metric = 'accuracy', n = 10)
+```
+:::
+
+**3.5** Explain why it might be important to include imputation in cross validation (rather than finishing all of the data cleaning before you tune/train/validate).
+
+:::{style="display: inherit;"}
+[Answer]{.ans} Imputation (and other parts of the recipe) are all part of the learning process. You want to capture how accurate (and how uncertain/variable) your **whole** learning process is—not just one part of it.
+:::

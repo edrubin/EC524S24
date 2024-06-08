@@ -212,7 +212,8 @@ Due: 18 May 2024 (submit on Canvas)
 
 **003** [Trees, ensembles, and imputation](projects/project-003)
 
-[Help from class](projects/project-003/key-003.md)
+[Help from class](projects/project-003/help-003.md)
+[Key](projects/project-003/key-003.html)
 
 Due: 28 May 2024 (submit on Canvas)
 
